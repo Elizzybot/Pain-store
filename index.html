@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WhatsApp Unban Appeal</title>
+  <title>WhatsApp Unban Request</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -72,7 +72,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>WhatsApp Unban Appeal</h1>
+    <h1>Request WhatsApp Unban</h1>
 
     <label for="emailSelect">Choose WhatsApp Team</label>
     <select id="emailSelect" required>
@@ -95,7 +95,7 @@
     <label for="number">WhatsApp Number</label>
     <input type="text" id="number" placeholder="+234..." required />
 
-    <button onclick="generateEmail()">Send Appeal via Gmail</button>
+    <button onclick="generateEmail()">Send Unban Request via Gmail</button>
 
     <div class="footer">
       &copy; 2025 Mike's Appeal Portal | <a href="analysis.html">View Analysis</a>
@@ -103,26 +103,26 @@
   </div>
 
   <script>
-    const customMessage = `Dear WhatsApp Support Team,
+    const customUnbanMessage = `Dear WhatsApp Support Team,
 
-I am writing to request the permanent unbanning of my WhatsApp number which was banned due to the violation of WhatsApp's Terms of Service. I acknowledge the mistake and sincerely apologize for any inconvenience caused.
+I am writing to request the unbanning of my WhatsApp number which was banned due to a violation of WhatsApp's Terms of Service. I acknowledge the mistake and sincerely apologize for any inconvenience caused.
 
-I assure you that I understand the importance of adhering to the platform's guidelines and I am committed to using WhatsApp responsibly in the future. I kindly ask for your understanding and consideration in granting me a second chance to regain access to my account.
+I understand the importance of following the platform's guidelines and I am committed to using WhatsApp responsibly moving forward. I kindly ask for your understanding and consideration in granting me a second chance to regain access to my account.
 
 Thank you for your attention to this matter.`;
 
-    const permanentMessages = [
-      "Dear WhatsApp Team,\n\nMy account has been permanently banned, and I believe this action may have been taken in error. I respectfully request a thorough review of my case. I deeply value the platform and am committed to full compliance with your policies.",
-      "Hello WhatsApp Support,\n\nI’m writing to appeal a permanent ban on my account. I understand the seriousness of this action and assure you that I’ve always aimed to follow your guidelines. Please reconsider my status — I rely on WhatsApp for critical communication.",
-      "To the WhatsApp Review Team,\n\nI believe my account was permanently banned due to a misunderstanding. I respectfully ask for a second look. I’m fully committed to responsible use and appreciate your time and fairness.",
-      customMessage
+    const permanentUnbanMessages = [
+      "Dear WhatsApp Team,\n\nMy account was permanently banned, and I believe this may have been a misunderstanding. I respectfully request a full review and hope to be reinstated. I value WhatsApp deeply and will adhere strictly to all guidelines.",
+      "Hello WhatsApp Support,\n\nI’m appealing the permanent ban on my account. I understand the seriousness and assure you I’ve learned from this experience. Please consider unbanning my account so I can continue using WhatsApp responsibly.",
+      "To the WhatsApp Review Team,\n\nI believe my account was permanently banned in error. I respectfully ask for a second chance. I’m committed to responsible use and appreciate your time and fairness.",
+      customUnbanMessage
     ];
 
-    const temporaryMessages = [
-      "Hi WhatsApp Team,\n\nI noticed my account has been temporarily restricted. I’d appreciate any clarification and hope to have it restored soon. I’ll be more mindful moving forward.",
-      "Hello,\n\nMy account seems to be temporarily banned. I apologize if I violated any terms and kindly ask for a quick review. I value the service and will ensure better compliance.",
+    const temporaryUnbanMessages = [
+      "Hi WhatsApp Team,\n\nMy account was temporarily banned. I apologize if I violated any terms and kindly ask for a quick review. I value the service and will ensure better compliance.",
+      "Hello,\n\nI noticed my account has been temporarily restricted. I’d appreciate any clarification and hope to have it restored soon. I’ll be more mindful moving forward.",
       "Dear Support,\n\nI’m reaching out regarding a temporary ban on my WhatsApp account. I understand the importance of your policies and hope to resolve this quickly.",
-      customMessage
+      customUnbanMessage
     ];
 
     function generateEmail() {
@@ -135,10 +135,10 @@ Thank you for your attention to this matter.`;
         return;
       }
 
-      const pool = banType === "Permanent" ? permanentMessages : temporaryMessages;
+      const pool = banType === "Permanent" ? permanentUnbanMessages : temporaryUnbanMessages;
       const message = `${pool[Math.floor(Math.random() * pool.length)]}\n\nWhatsApp Number: ${number}`;
 
-      const subject = encodeURIComponent("WhatsApp Ban Appeal Submission");
+      const subject = encodeURIComponent("Request for WhatsApp Unban");
       const body = encodeURIComponent(message);
       const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 
