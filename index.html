@@ -95,15 +95,7 @@
     <label for="number">WhatsApp Number</label>
     <input type="text" id="number" placeholder="+234..." required />
 
-    <button onclick="sendAppeal()">Send Appeal</button>
-
-    <form id="appealForm" method="POST" style="display:none;">
-      <input type="hidden" name="_subject" value="WhatsApp Ban Appeal Submission" />
-      <input type="hidden" name="_captcha" value="false" />
-      <input type="hidden" name="_template" value="table" />
-      <input type="hidden" name="_next" value="thank-you.html" />
-      <input type="hidden" name="message" id="hiddenMessage" />
-    </form>
+    <button onclick="generateEmail()">Send Appeal via Gmail</button>
 
     <div class="footer">
       &copy; 2025 Mike's Appeal Portal | <a href="analysis.html">View Analysis</a>
@@ -123,11 +115,10 @@
       "Dear Support,\n\nI’m reaching out regarding a temporary ban on my WhatsApp account. I understand the importance of your policies and hope to resolve this quickly."
     ];
 
-    function sendAppeal() {
+    function generateEmail() {
       const email = document.getElementById("emailSelect").value;
       const banType = document.getElementById("banType").value;
       const number = document.getElementById("number").value.trim();
-      const form = document.getElementById("appealForm");
 
       if (!email || !banType || !number) {
         alert("Please fill out all fields.");
@@ -137,21 +128,11 @@
       const pool = banType === "Permanent" ? permanentMessages : temporaryMessages;
       const message = `${pool[Math.floor(Math.random() * pool.length)]}\n\nWhatsApp Number: ${number}`;
 
-      document.getElementById("hiddenMessage").value = message;
-      form.setAttribute("action", `https://formsubmit.co/${email}`);
-      form.submit();
+      const subject = encodeURIComponent("WhatsApp Ban Appeal Submission");
+      const body = encodeURIComponent(message);
+      const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 
-      const submission = {
-        email,
-        banType,
-        number,
-        message,
-        timestamp: new Date().toLocaleString()
-      };
-
-      const history = JSON.parse(localStorage.getItem("appealHistory")) || [];
-      history.push(submission);
-      localStorage.setItem("appealHistory", JSON.stringify(history));
+      window.location.href = mailtoLink;
     }
   </script>
 </body>
