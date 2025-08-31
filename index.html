@@ -1,117 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WhatsApp Ban Appeal</title>
+  <meta charset="UTF-8">
+  <title>WhatsApp Unban Appeal</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 50px auto;
-      background: #fff;
-      padding: 30px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      border-radius: 8px;
-    }
-
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 16px;
-    }
-
-    button {
-      margin-top: 20px;
-      padding: 12px;
-      width: 100%;
-      background-color: #25D366;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 18px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #1DA851;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 30px;
-      font-size: 14px;
-      color: #777;
-    }
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+    .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+    select, button { width: 100%; padding: 10px; margin-top: 10px; font-size: 16px; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>WhatsApp Ban Appeal</h1>
-    <form id="appealForm" method="POST">
-      <label for="emailSelect">Choose WhatsApp Team</label>
-      <select id="emailSelect" required>
-        <option value="">Select a team...</option>
-        <option value="elijahchinecheremonah@gmail.com">📩 Jan's Desk</option>
-        <option value="support@support.whatsapp.com">🛠️ General Support</option>
-        <option value="smb@support.whatsapp.com">🏢 SMB Support</option>
-        <option value="android@whatsapp.com">📱 Android Team</option>
-        <option value="android@support.whatsapp.com">🔧 Android Support</option>
-      </select>
+    <h2>WhatsApp Unban Appeal</h2>
 
-      <label for="name">Your Name</label>
-      <input type="text" id="name" name="name" required />
+    <label for="email">Choose WhatsApp Team:</label>
+    <select id="email">
+      <option value="elijahchinecheremonah@gmail.com">elijahchinecheremonah@gmail.com</option>
+      <option value="appeals@support.whatsapp.com">appeals@support.whatsapp.com</option>
+      <option value="contact@whatsapp.com">contact@whatsapp.com</option>
+    </select>
 
-      <label for="number">WhatsApp Number</label>
-      <input type="text" id="number" name="number" required />
+    <label for="banType">Ban Type:</label>
+    <select id="banType">
+      <option value="temporary">Temporary Ban</option>
+      <option value="permanent">Permanent Ban</option>
+    </select>
 
-      <label for="reason">Reason for Appeal</label>
-      <textarea id="reason" name="reason" rows="5" required></textarea>
+    <button onclick="sendAppeal()">Send Appeal</button>
 
-      <!-- Hidden fields -->
-      <input type="hidden" name="_subject" value="WhatsApp Ban Appeal Submission" />
-      <input type="hidden" name="_captcha" value="false" />
-      <input type="hidden" name="_next" value="thank-you.html" />
-
-      <button type="submit">Send Appeal</button>
+    <form id="appealForm" action="https://formsubmit.co/ajax" method="POST" style="display:none;">
+      <input type="hidden" name="_subject" value="WhatsApp Unban Appeal">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="email" id="hiddenEmail">
+      <input type="hidden" name="ban_type" id="hiddenBanType">
+      <input type="hidden" name="message" id="hiddenMessage">
     </form>
-    <div class="footer">
-      &copy; 2025 Mike's Appeal Portal
-    </div>
   </div>
 
   <script>
-    const form = document.getElementById("appealForm");
-    const emailSelect = document.getElementById("emailSelect");
-
-    emailSelect.addEventListener("change", function () {
-      const selectedEmail = emailSelect.value;
-      if (selectedEmail) {
-        form.setAttribute("action", `https://formsubmit.co/${selectedEmail}`);
+    function generateMessage(banType) {
+      if (banType === "temporary") {
+        return "Hello WhatsApp Team,\n\nMy account was temporarily banned. I believe this was a mistake and I kindly request a review. I assure you I’ve followed all guidelines.\n\nThank you.";
       } else {
-        form.removeAttribute("action");
+        return "Dear WhatsApp Support,\n\nMy account appears to be permanently banned. I respectfully request a second look into this matter. I value WhatsApp and hope to resolve this.\n\nSincerely.";
       }
-    });
+    }
+
+    function sendAppeal() {
+      const email = document.getElementById("email").value;
+      const banType = document.getElementById("banType").value;
+      const message = generateMessage(banType);
+
+      document.getElementById("hiddenEmail").value = email;
+      document.getElementById("hiddenBanType").value = banType;
+      document.getElementById("hiddenMessage").value = message;
+
+      document.getElementById("appealForm").submit();
+    }
   </script>
 </body>
 </html>
