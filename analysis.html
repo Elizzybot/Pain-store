@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Appeal Analysis</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    th {
+      background-color: #25D366;
+      color: white;
+    }
+
+    .rating {
+      margin-top: 10px;
+    }
+
+    .star {
+      font-size: 20px;
+      cursor: pointer;
+      color: #ccc;
+    }
+
+    .star.selected {
+      color: gold;
+    }
+  </style>
+</head>
+<body>
+  <h1>📊 Appeal Submission Analysis</h1>
+  <table id="historyTable">
+    <thead>
+      <tr>
+        <th>Timestamp</th>
+        <th>Ban Type</th>
+        <th>Number</th>
+        <th>Message Strength</th>
+        <th>Rating</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const history = JSON.parse(localStorage.getItem("appealHistory")) || [];
+    const tbody = document.querySelector("#historyTable tbody");
+
+    history.forEach((entry, index) => {
+      const strength = entry.banType === "Permanent" ? "💪 Strong" : "🙂 Light";
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${entry.timestamp}</td>
+        <td>${entry.banType}</td>
+        <td>${entry.number}</td>
+        <td>${strength}</td>
+        <td>
+          <div class="rating" data-index="${index}">
+            ${[1,2,3,4,5].map(i => `<span class="star" data-value="${i}">&#9733;</span>`).join("")}
+          </div>
+        </td>
+      `;
+
+      tbody.appendChild(row);
+    });
+
+    document.querySelectorAll(".rating").forEach(rating => {
+      rating.addEventListener("click", e => {
+        if (e.target.classList.contains("star")) {
+          const value = parseInt(e.target.dataset.value);
+          const index = rating.dataset.index;
+          localStorage.setItem(`rating-${index}`, value

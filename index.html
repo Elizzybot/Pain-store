@@ -63,6 +63,11 @@
       font-size: 14px;
       color: #777;
     }
+
+    .footer a {
+      color: #25D366;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -101,11 +106,23 @@
     </form>
 
     <div class="footer">
-      &copy; 2025 Mike's Appeal Portal
+      &copy; 2025 Mike's Appeal Portal | <a href="analysis.html">View Analysis</a>
     </div>
   </div>
 
   <script>
+    const permanentMessages = [
+      "Dear WhatsApp Team,\n\nMy account has been permanently banned, and I believe this action may have been taken in error. I respectfully request a thorough review of my case. I deeply value the platform and am committed to full compliance with your policies.",
+      "Hello WhatsApp Support,\n\nI’m writing to appeal a permanent ban on my account. I understand the seriousness of this action and assure you that I’ve always aimed to follow your guidelines. Please reconsider my status — I rely on WhatsApp for critical communication.",
+      "To the WhatsApp Review Team,\n\nI believe my account was permanently banned due to a misunderstanding. I respectfully ask for a second look. I’m fully committed to responsible use and appreciate your time and fairness."
+    ];
+
+    const temporaryMessages = [
+      "Hi WhatsApp Team,\n\nI noticed my account has been temporarily restricted. I’d appreciate any clarification and hope to have it restored soon. I’ll be more mindful moving forward.",
+      "Hello,\n\nMy account seems to be temporarily banned. I apologize if I violated any terms and kindly ask for a quick review. I value the service and will ensure better compliance.",
+      "Dear Support,\n\nI’m reaching out regarding a temporary ban on my WhatsApp account. I understand the importance of your policies and hope to resolve this quickly."
+    ];
+
     function sendAppeal() {
       const email = document.getElementById("emailSelect").value;
       const banType = document.getElementById("banType").value;
@@ -117,20 +134,24 @@
         return;
       }
 
-      const message = `Hello WhatsApp Support,
-
-My WhatsApp number is ${number}. I believe my account was banned due to a misunderstanding. I understand the importance of following WhatsApp’s policies and sincerely apologize if I violated any terms.
-
-I kindly request a review of my ${banType.toLowerCase()} ban. I’m committed to using WhatsApp responsibly moving forward.
-
-Thank you for your time and consideration.
-
-Best regards,
-Mike`;
+      const pool = banType === "Permanent" ? permanentMessages : temporaryMessages;
+      const message = `${pool[Math.floor(Math.random() * pool.length)]}\n\nWhatsApp Number: ${number}`;
 
       document.getElementById("hiddenMessage").value = message;
       form.setAttribute("action", `https://formsubmit.co/${email}`);
       form.submit();
+
+      const submission = {
+        email,
+        banType,
+        number,
+        message,
+        timestamp: new Date().toLocaleString()
+      };
+
+      const history = JSON.parse(localStorage.getItem("appealHistory")) || [];
+      history.push(submission);
+      localStorage.setItem("appealHistory", JSON.stringify(history));
     }
   </script>
 </body>
