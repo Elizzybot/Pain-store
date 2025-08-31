@@ -1,62 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WhatsApp Unban Appeal</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
-    .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
-    select, button { width: 100%; padding: 10px; margin-top: 10px; font-size: 16px; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      background-color: #25D366;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1DA851;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 14px;
+      color: #777;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>WhatsApp Unban Appeal</h2>
+    <h1>WhatsApp Unban Appeal</h1>
 
-    <label for="email">Choose WhatsApp Team:</label>
-    <select id="email">
-      <option value="elijahchinecheremonah@gmail.com">elijahchinecheremonah@gmail.com</option>
-      <option value="appeals@support.whatsapp.com">appeals@support.whatsapp.com</option>
-      <option value="contact@whatsapp.com">contact@whatsapp.com</option>
+    <label for="emailSelect">Choose WhatsApp Team</label>
+    <select id="emailSelect" required>
+      <option value="">Select a team...</option>
+      <option value="jan@whatsapp.com">📩 Jan's Desk</option>
+      <option value="support@support.whatsapp.com">🛠️ General Support</option>
+      <option value="smb@support.whatsapp.com">🏢 SMB Support</option>
+      <option value="android@whatsapp.com">📱 Android Team</option>
+      <option value="android@support.whatsapp.com">🔧 Android Support</option>
+      <option value="elijahchinecheremonah@gmail.com">🧑 Elijah (Custom)</option>
     </select>
 
-    <label for="banType">Ban Type:</label>
-    <select id="banType">
-      <option value="temporary">Temporary Ban</option>
-      <option value="permanent">Permanent Ban</option>
+    <label for="banType">Type of Ban</label>
+    <select id="banType" required>
+      <option value="">Select ban type...</option>
+      <option value="Permanent">Permanent</option>
+      <option value="Temporary">Temporary</option>
     </select>
+
+    <label for="number">WhatsApp Number</label>
+    <input type="text" id="number" placeholder="+234..." required />
 
     <button onclick="sendAppeal()">Send Appeal</button>
 
-    <form id="appealForm" action="https://formsubmit.co/ajax" method="POST" style="display:none;">
-      <input type="hidden" name="_subject" value="WhatsApp Unban Appeal">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="email" id="hiddenEmail">
-      <input type="hidden" name="ban_type" id="hiddenBanType">
-      <input type="hidden" name="message" id="hiddenMessage">
+    <form id="appealForm" method="POST" style="display:none;">
+      <input type="hidden" name="_subject" value="WhatsApp Ban Appeal Submission" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_next" value="thank-you.html" />
+      <input type="hidden" name="message" id="hiddenMessage" />
     </form>
+
+    <div class="footer">
+      &copy; 2025 Mike's Appeal Portal
+    </div>
   </div>
 
   <script>
-    function generateMessage(banType) {
-      if (banType === "temporary") {
-        return "Hello WhatsApp Team,\n\nMy account was temporarily banned. I believe this was a mistake and I kindly request a review. I assure you I’ve followed all guidelines.\n\nThank you.";
-      } else {
-        return "Dear WhatsApp Support,\n\nMy account appears to be permanently banned. I respectfully request a second look into this matter. I value WhatsApp and hope to resolve this.\n\nSincerely.";
-      }
-    }
-
     function sendAppeal() {
-      const email = document.getElementById("email").value;
+      const email = document.getElementById("emailSelect").value;
       const banType = document.getElementById("banType").value;
-      const message = generateMessage(banType);
+      const number = document.getElementById("number").value.trim();
+      const form = document.getElementById("appealForm");
 
-      document.getElementById("hiddenEmail").value = email;
-      document.getElementById("hiddenBanType").value = banType;
+      if (!email || !banType || !number) {
+        alert("Please fill out all fields.");
+        return;
+      }
+
+      const message = `Hello WhatsApp Support,
+
+My WhatsApp number is ${number}. I believe my account was banned due to a misunderstanding. I understand the importance of following WhatsApp’s policies and sincerely apologize if I violated any terms.
+
+I kindly request a review of my ${banType.toLowerCase()} ban. I’m committed to using WhatsApp responsibly moving forward.
+
+Thank you for your time and consideration.
+
+Best regards,
+Mike`;
+
       document.getElementById("hiddenMessage").value = message;
-
-      document.getElementById("appealForm").submit();
+      form.setAttribute("action", `https://formsubmit.co/${email}`);
+      form.submit();
     }
   </script>
 </body>
