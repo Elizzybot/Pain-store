@@ -33,7 +33,7 @@
     }
 
     .rating {
-      margin-top: 10px;
+      margin-top: 5px;
     }
 
     .star {
@@ -45,6 +45,25 @@
     .star.selected {
       color: gold;
     }
+
+    .export {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .export button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #25D366;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .export button:hover {
+      background-color: #1DA851;
+    }
   </style>
 </head>
 <body>
@@ -55,26 +74,30 @@
         <th>Timestamp</th>
         <th>Ban Type</th>
         <th>Number</th>
-        <th>Message Strength</th>
+        <th>Message Preview</th>
         <th>Rating</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
 
+  <div class="export">
+    <button onclick="exportCSV()">Export to CSV</button>
+  </div>
+
   <script>
     const history = JSON.parse(localStorage.getItem("appealHistory")) || [];
     const tbody = document.querySelector("#historyTable tbody");
 
     history.forEach((entry, index) => {
-      const strength = entry.banType === "Permanent" ? "💪 Strong" : "🙂 Light";
+      const preview = entry.message.split("\n")[0].slice(0, 60) + "...";
       const row = document.createElement("tr");
 
       row.innerHTML = `
         <td>${entry.timestamp}</td>
         <td>${entry.banType}</td>
         <td>${entry.number}</td>
-        <td>${strength}</td>
+        <td title="${entry.message.replace(/"/g, '&quot;')}">${preview}</td>
         <td>
           <div class="rating" data-index="${index}">
             ${[1,2,3,4,5].map(i => `<span class="star" data-value="${i}">&#9733;</span>`).join("")}
@@ -90,4 +113,42 @@
         if (e.target.classList.contains("star")) {
           const value = parseInt(e.target.dataset.value);
           const index = rating.dataset.index;
-          localStorage.setItem(`rating-${index}`, value
+          localStorage.setItem(`rating-${index}`, value);
+
+          rating.querySelectorAll(".star").forEach(star => {
+            star.classList.remove("selected");
+            if (parseInt(star.dataset.value) <= value) {
+              star.classList.add("selected");
+            }
+          });
+        }
+      });
+
+      const index = rating.dataset.index;
+      const savedRating = localStorage.getItem(`rating-${index}`);
+      if (savedRating) {
+        rating.querySelectorAll(".star").forEach(star => {
+          if (parseInt(star.dataset.value) <= savedRating) {
+            star.classList.add("selected");
+          }
+        });
+      }
+    });
+
+    function exportCSV() {
+      let csv = "Timestamp,Ban Type,Number,Message,Rating\n";
+      history.forEach((entry, index) => {
+        const rating = localStorage.getItem(`rating-${index}`) || "";
+        const cleanMessage = entry.message.replace(/"/g, '""').replace(/\n/g, ' ');
+        csv += `"${entry.timestamp}","${entry.banType}","${entry.number}","${cleanMessage}","${rating}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "appeal_analysis.csv";
+      link.click();
+    }
+  </script>
+</body>
+</html>
